@@ -1,3 +1,13 @@
+name: Build OPTEE
+
+on:
+  workflow_dispatch:   # 這行會讓按鈕出現
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
 - name: Install required dependencies
   run: |
     sudo apt-get update -y
