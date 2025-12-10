@@ -6,8 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-
+  
+  steps:
 - name: Install required dependencies
   run: |
     sudo apt-get update -y
