@@ -1,0 +1,34 @@
+- name: Install required dependencies
+  run: |
+    sudo apt-get update -y
+    sudo apt-get install -y adb acpica-tools autoconf automake bc bison build-essential \
+      ccache cpio cscope curl device-tree-compiler e2tools expect fastboot flex \
+      ftp-upload gdisk git libattr1-dev libcap-ng-dev libfdt-dev libftdi-dev \
+      libglib2.0-dev libgmp3-dev libhidapi-dev libmpc-dev libncurses5-dev libpixman-1-dev \
+      libslirp-dev libssl-dev libtool libusb-1.0-0-dev make mtools netcat ninja-build \
+      python3-cryptography python3-pip python3-pyelftools python3-serial python3-tomli \
+      python-is-python3 rsync swig unzip uuid-dev wget xdg-utils xsltproc xterm xz-utils \
+      zlib1g-dev zlib1g libgnutls28-dev
+
+- name: Setup repo tool and git config
+  run: |
+    curl -L https://storage.googleapis.com/git-repo-downloads/repo > ~/repo
+    sudo mv ~/repo /bin/repo
+    sudo chmod a+x /bin/repo
+    # Configure git identity
+    git config --global user.name 'SCOPELAB'
+    git config --global user.email 'whoami@scope.lab'
+    
+- name: Pull the source code
+  run: |
+    # Pull the source code
+    mkdir ~/optee && cd ~/optee
+    yes | repo init -u https://github.com/NTHU-SCOPELAB/cr-tee-manifest.git -m qemu_v8.xml
+    repo sync -j4
+    mkdir -p ~/optee/build
+
+- name: Run build
+  run: |
+    cd ~/optee/build
+    make toolchains -j$(nproc)
+    make -j$(nproc)
